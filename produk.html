@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semua Produk - TaniYuk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header (Sama dengan index.html) -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fa-solid fa-leaf"></i> TaniYuk
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Kembali ke Beranda</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-5 mt-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Katalog Produk Kami</h2>
+                <p>Temukan hasil panen segar dan alat tani terbaik langsung dari petani.</p>
+            </div>
+
+            <!-- Filter (Gaya Shopee) -->
+            <div class="d-flex justify-content-center mb-4 gap-2 flex-wrap">
+                <button class="btn btn-outline-success rounded-pill px-4 active">Semua</button>
+                <button class="btn btn-outline-success rounded-pill px-4">Sayuran</button>
+                <button class="btn btn-outline-success rounded-pill px-4">Alat Tani</button>
+                <button class="btn btn-outline-success rounded-pill px-4">Pupuk</button>
+            </div>
+
+            <!-- Grid Produk (Gaya Shopee) -->
+            <div class="row g-4" id="allProductsContainer">
+                <!-- Data produk akan dimuat di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Sama dengan index.html) -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p>&copy; 2026 TaniYuk Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Menggunakan array produk yang sama agar konsisten
+        const productsDB = [
+            { id: 1, name: "Tomat Ceri Hidroponik", price: "Rp 25.000", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500" },
+            { id: 2, name: "Selada Keriting", price: "Rp 15.000", image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=500" },
+            { id: 3, name: "Traktor Mini", price: "Rp 4.500.000", image: "https://images.unsplash.com/photo-1592982537447-6f296d194726?w=500" },
+            { id: 4, name: "Pupuk Kompos", price: "Rp 45.000", image: "https://images.unsplash.com/photo-1589923158776-cb4485d99fd6?w=500" },
+            { id: 5, name: "Wortel Segar", price: "Rp 18.000", image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500" },
+            { id: 6, name: "Benih Cabai", price: "Rp 35.000", image: "https://images.unsplash.com/photo-1596199050105-6d5d32222916?w=500" }
+        ];
+
+        const container = document.getElementById('allProductsContainer');
+        productsDB.forEach(p => {
+            container.innerHTML += `
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm p-2">
+                        <img src="${p.image}" class="card-img-top rounded" style="height:200px; object-fit:cover;">
+                        <div class="card-body p-2">
+                            <h6 class="card-title">${p.name}</h6>
+                            <p class="text-success fw-bold">${p.price}</p>
+                            <button class="btn btn-sm btn-success w-100">Beli</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+
+</html>
