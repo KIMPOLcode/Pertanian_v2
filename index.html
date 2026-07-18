@@ -624,10 +624,26 @@
 
         .chat-header {
             background: var(--primary-green);
-            color: black;
+            color: white;
             padding: 20px;
             border-radius: 20px 20px 0 0;
             text-align: center;
+            /* Memastikan semua isi di dalam header ke tengah */
+        }
+
+        .chat-header h5 {
+            color: white !important;
+            /* Memastikan judul berwarna putih */
+            font-weight: 600;
+        }
+
+        .chat-header small {
+            display: block;
+            /* Agar pindah baris ke bawah */
+            color: white !important;
+            /* Memastikan sub-judul berwarna putih */
+            font-size: 0.8rem;
+            opacity: 0.9;
         }
 
         .chat-body {
