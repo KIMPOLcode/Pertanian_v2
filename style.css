@@ -305,18 +305,6 @@
             color: var(--light-green);
         }
 
-        /* Video Section */
-        .video-wrapper {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .video-wrapper:hover {
-            transform: scale(1.02);
-        }
-
         /* Contact Section */
         .contact-info-card {
             background: var(--primary-green);
@@ -469,72 +457,136 @@
             .hero-section { height: 80vh; }
         }
 
-        /* ================= VIDEO ================= */
+        /* ================= VIDEO SECTION ================= */
 
 #video {
-    padding: 80px 8%;
-    background: #f8f8ec;
+    padding: 90px 8%;
+    background: var(--bg-light);
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
 }
 
 .section-header h2 {
-    font-size: 2.5rem;
-    color: #2e7d32;
+    font-size: 2.6rem;
+    color: var(--primary-green);
     margin-bottom: 15px;
 }
 
 .section-header p {
-    color: #666;
     max-width: 700px;
     margin: auto;
+    color: var(--earth-brown);
     line-height: 1.8;
+    font-size: 1rem;
 }
+
+/* ================= GRID ================= */
 
 .video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 35px;
+    align-items: stretch;
 }
 
+/* ================= CARD ================= */
+
 .video-card {
-    background: #fff;
+    background: var(--white);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: 0.4s;
+    transition: all .4s ease;
 }
 
 .video-card:hover {
     transform: translateY(-10px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
 }
+
+/* ================= IFRAME ================= */
 
 .video-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%;
+    aspect-ratio: 16/9;
+    background: #f3f3f3;
 }
 
 .video-wrapper iframe {
     position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     border: none;
 }
+
+/* ================= CONTENT ================= */
 
 .video-info {
     padding: 25px;
 }
 
 .video-info h3 {
-    color: #2e7d32;
+    color: var(--primary-green);
+    font-size: 1.25rem;
     margin-bottom: 12px;
+    font-family: 'Lora', serif;
+    line-height: 1.4;
 }
 
 .video-info p {
-    color: #666;
-    line-height: 1.7;
+    color: var(--earth-brown);
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+
+    #video {
+        padding: 80px 6%;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .section-header h2 {
+        font-size: 2rem;
+    }
+
+    .section-header p {
+        font-size: .95rem;
+    }
+
+    .video-info {
+        padding: 20px;
+    }
+
+    .video-info h3 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+
+    #video {
+        padding: 70px 5%;
+    }
+
+    .video-grid {
+        gap: 25px;
+    }
+
+    .video-card {
+        border-radius: 16px;
+    }
 }
