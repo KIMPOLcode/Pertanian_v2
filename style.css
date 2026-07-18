@@ -1,0 +1,49 @@
+/* Navbar Styling */
+    .navbar-custom {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    }
+
+    .navbar-brand {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--primary-green) !important;
+    }
+
+    .navbar-brand i {
+    color: var(--light-green);
+    margin-right: 8px;
+    }
+
+    .nav-link {
+    color: var(--earth-brown) !important;
+    font-weight: 500;
+    margin: 0 10px;
+    position: relative;
+    transition: color 0.3s;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+    color: var(--primary-green) !important;
+    }
+
+    .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--primary-green);
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+    width: 80%;
+    }
