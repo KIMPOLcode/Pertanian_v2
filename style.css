@@ -468,3 +468,73 @@
             .hero-title { font-size: 2.5rem; }
             .hero-section { height: 80vh; }
         }
+
+        /* ================= VIDEO ================= */
+
+#video {
+    padding: 80px 8%;
+    background: #f8f8ec;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: #2e7d32;
+    margin-bottom: 15px;
+}
+
+.section-header p {
+    color: #666;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.8;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 35px;
+}
+
+.video-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.4s;
+}
+
+.video-card:hover {
+    transform: translateY(-10px);
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-info {
+    padding: 25px;
+}
+
+.video-info h3 {
+    color: #2e7d32;
+    margin-bottom: 12px;
+}
+
+.video-info p {
+    color: #666;
+    line-height: 1.7;
+}
