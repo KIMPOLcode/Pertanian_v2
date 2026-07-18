@@ -586,67 +586,89 @@
             }
         }
 
-        /* Chatbot Styles */
+        /* Modern Chatbot Styles */
         .chat-toggler {
             position: fixed;
             bottom: 30px;
             right: 30px;
             background: var(--primary-green);
             color: white;
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
             z-index: 9999;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .chat-toggler:hover {
+            transform: scale(1.1);
         }
 
         .chat-popup {
             position: fixed;
-            bottom: 100px;
+            bottom: 110px;
             right: 30px;
-            width: 350px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            width: 360px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             display: none;
             z-index: 9998;
             overflow: hidden;
+            border: 1px solid #e0e0e0;
         }
 
         .chat-header {
             background: var(--primary-green);
             color: white;
-            padding: 15px;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
         }
 
         .chat-body {
-            height: 300px;
+            height: 350px;
             overflow-y: auto;
-            padding: 15px;
-        }
-
-        .chat-input {
-            padding: 10px;
-            border-top: 1px solid #eee;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .msg {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            max-width: 85%;
         }
 
         .bot-msg {
-            background: #f1f8e9;
+            background: #e8f5e9;
+            color: #1b5e20;
             align-self: flex-start;
+            border-bottom-left-radius: 5px;
         }
 
         .user-msg {
-            background: #e0e0e0;
-            text-align: right;
+            background: var(--primary-green);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .form-select {
+            border-radius: 50px;
+            border-color: var(--primary-green);
         }
     </style>
 </head>
@@ -1103,20 +1125,20 @@
         </div>
     </div>
 
-    <!-- Chatbot Button -->
-    <button class="chat-toggler" onclick="toggleChat()"><i class="fa-solid fa-robot"></i></button>
+    <button class="chat-toggler" onclick="toggleChat()"><i class="fa-solid fa-comments"></i></button>
 
-    <!-- Chat Window -->
     <div class="chat-popup" id="chatPopup">
         <div class="chat-header">
-            <h5>TaniBot - Asisten Petani</h5>
+            <h5 class="mb-0"><i class="fa-solid fa-robot me-2"></i>TaniBot AI</h5>
+            <small class="text-white-50">Siap membantu masalah pertanian Anda</small>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="msg bot-msg">Halo! Saya TaniBot. Apa yang ingin Anda tanyakan seputar pertanian?</div>
+            <div class="msg bot-msg">Halo Petani Hebat! Pilih hama yang sedang menyerang di lahan Anda, saya akan
+                berikan solusinya.</div>
         </div>
         <div class="chat-input">
-            <select id="chatSelect" class="form-select" onchange="botReply()">
-                <option value="">Pilih Hama yang Menyerang...</option>
+            <select id="chatSelect" class="form-select shadow-sm" onchange="botReply()">
+                <option value="">Cari Hama/Masalah...</option>
                 <option value="wbc">Wereng Batang Coklat (Padi)</option>
                 <option value="ulat-grayak">Ulat Grayak (Padi/Jagung)</option>
                 <option value="thrips">Hama Thrips (Cabai/Tomat)</option>
@@ -1358,21 +1380,24 @@
             // Tampilkan pesan user
             chatBody.innerHTML += `<div class="msg user-msg">${select.options[select.selectedIndex].text}</div>`;
 
-            // Cari data di database
-            const data = taniData[value];
-            let botResponse = "";
-
-            if (data) {
-                botResponse = `<strong>Hama:</strong> ${data.hama}<br><strong>Gejala:</strong> ${data.gejala}<br><strong>Solusi:</strong> ${data.solusi}`;
-            } else {
-                botResponse = "Maaf, data hama tersebut sedang dalam pembaruan.";
-            }
+            // Tampilkan indikator "bot sedang mengetik"
+            const typing = document.createElement('div');
+            typing.className = 'msg bot-msg typing';
+            typing.innerHTML = '...';
+            chatBody.appendChild(typing);
+            chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(() => {
+                chatBody.removeChild(typing);
+                const data = taniData[value];
+                const botResponse = data ?
+                    `<strong>${data.hama}</strong><br><strong>Gejala:</strong> ${data.gejala}<br><strong>Solusi:</strong> ${data.solusi}` :
+                    "Maaf, data belum tersedia.";
+
                 chatBody.innerHTML += `<div class="msg bot-msg">${botResponse}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
                 select.value = "";
-            }, 500);
+            }, 1000); // Penundaan 1 detik agar terasa natural
         }
     </script>
 </body>
