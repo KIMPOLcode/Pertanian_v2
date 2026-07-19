@@ -4,58 +4,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semua Produk - TaniYuk</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>Katalog Produk Lengkap - TaniYuk</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 for UI Notifications (replaces default alert) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            /* Green */
+            --primary-hover: #1b5e20;
+            --accent-color: #ff5722;
+            /* Shopee-like orange for price */
+            --bg-light: #f5f5f5;
+            --text-dark: #333;
+            --text-muted: #757575;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding-top: 76px;
+            /* Offset for fixed navbar */
+        }
+
+        /* Navbar Styling */
+        .navbar-custom {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .btn-custom-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50px;
+            padding: 8px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom-primary:hover {
+            background-color: var(--primary-hover);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Filter Section */
+        .filter-container {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 25px;
+        }
+
+        .filter-btn {
+            border: 1px solid #e0e0e0;
+            background: white;
+            color: var(--text-dark);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Product Card Styling (E-commerce Style) */
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #f0f0f0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            /* 1:1 Aspect Ratio */
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .tox-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tox-kuning {
+            background-color: #fbc02d;
+            color: #333;
+        }
+
+        .tox-hijau {
+            background-color: #388e3c;
+        }
+
+        .tox-biru {
+            background-color: #1976d2;
+        }
+
+        .product-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-weight: 500;
+            /* Multi-line truncation */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 2.8em;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .product-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            margin-top: auto;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            margin-right: 5px;
+        }
+
+        .sold-count {
+            margin-left: 5px;
+            border-left: 1px solid #ddd;
+            padding-left: 5px;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            padding: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .product-card:hover .btn-add-cart {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            padding: 60px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer h5 {
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-link {
+            color: #a0a0a0;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: #333;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .filter-container {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 10px;
+                border-radius: 0;
+            }
+
+            .filter-btn {
+                display: inline-block;
+                margin-bottom: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="#">
                 <i class="fa-solid fa-leaf"></i> TaniYuk
             </a>
+
+            <!-- Search Bar (E-commerce feature) -->
+            <form class="d-none d-md-flex mx-auto w-50" onsubmit="event.preventDefault();">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Cari obat pertanian, agen hayati..."
+                        aria-label="Search">
+                    <button class="btn btn-outline-success" type="button"><i
+                            class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars fs-3 text-success"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="d-flex align-items-center">
-                    <a href="#products" class="btn btn-custom-primary btn-sm d-none d-lg-block">Belanja Sekarang</a>
-                </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark position-relative" href="#" onclick="showCartInfo()">
+                            <i class="fa-solid fa-cart-shopping fs-5"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 0.6rem;" id="cart-count">
+                                0
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a href="#" class="btn btn-custom-primary btn-sm">Akun Saya</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <section class="py-5 mt-5">
+    <section class="py-4">
         <div class="container">
-            <div class="section-title text-center mb-5">
-                <h2>Katalog Produk Kami</h2>
-                <p>Temukan hasil panen segar dan alat tani terbaik langsung dari petani.</p>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h4 class="fw-bold mb-1">Apotek Pertanian</h4>
+                    <p class="text-muted small">Solusi perlindungan tanaman terpadu, dari pestisida komersial hingga
+                        organik.</p>
+                </div>
             </div>
 
-            <!-- Filter (Gaya Shopee) -->
-            <div class="d-flex justify-content-center mb-4 gap-2 flex-wrap">
-                <button class="btn btn-outline-success rounded-pill px-4 active">Semua</button>
-                <button class="btn btn-outline-success rounded-pill px-4">Sayuran</button>
-                <button class="btn btn-outline-success rounded-pill px-4">Alat Tani</button>
-                <button class="btn btn-outline-success rounded-pill px-4">Pupuk</button>
+            <!-- Filter Categories -->
+            <div class="filter-container d-flex gap-2 flex-wrap" id="filterContainer">
+                <button class="filter-btn active" data-filter="Semua">Semua Produk</button>
+                <button class="filter-btn" data-filter="Insektisida">Insektisida</button>
+                <button class="filter-btn" data-filter="Fungisida">Fungisida</button>
+                <button class="filter-btn" data-filter="Agen Hayati">Agen Hayati</button>
+                <button class="filter-btn" data-filter="Biofertilizer">Biofertilizer (PGPR)</button>
             </div>
 
-            <!-- Grid Produk (Gaya Shopee) -->
-            <div class="row g-4" id="allProductsContainer">
-                <!-- Data produk akan dimuat di sini -->
+            <div class="row g-3" id="productGrid">
+                <!-- Data produk akan dimuat oleh JavaScript di sini -->
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row g-4">
@@ -63,11 +375,10 @@
                     <a class="navbar-brand text-white mb-4 d-block" href="#">
                         <i class="fa-solid fa-leaf text-success"></i> TaniYuk
                     </a>
-                    <p class="text-white-50 mb-4">Platform pertanian modern yang menghubungkan petani, teknologi, dan
-                        pasar dalam satu ekosistem digital terpadu.</p>
+                    <p class="text-white-50 mb-4" style="font-size: 0.9rem;">Platform pertanian modern yang
+                        menghubungkan petani, teknologi, dan pasar dalam satu ekosistem digital terpadu.</p>
                     <div class="social-links">
                         <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
                         <a href="#"><i class="fa-brands fa-instagram"></i></a>
                         <a href="#"><i class="fa-brands fa-youtube"></i></a>
                     </div>
@@ -75,29 +386,28 @@
 
                 <div class="col-lg-2 col-md-6">
                     <h5>Tautan Cepat</h5>
-                    <a href="#home" class="footer-link">Beranda</a>
-                    <a href="#about" class="footer-link">Tentang Kami</a>
-                    <a href="#services" class="footer-link">Layanan</a>
-                    <a href="#products" class="footer-link">Produk</a>
-                    <a href="#artikel" class="footer-link">Artikel Baru</a>
+                    <a href="#" class="footer-link">Beranda</a>
+                    <a href="#" class="footer-link">Tentang Kami</a>
+                    <a href="#" class="footer-link">Katalog Produk</a>
+                    <a href="#" class="footer-link">Panduan PHT</a>
                 </div>
 
                 <div class="col-lg-3 col-md-6">
-                    <h5>Kategori Produk</h5>
-                    <a href="#" class="footer-link">Sayuran Organik</a>
-                    <a href="#" class="footer-link">Buah-buahan Segar</a>
-                    <a href="#" class="footer-link">Alat Pertanian Modern</a>
-                    <a href="#" class="footer-link">Benih & Pupuk</a>
+                    <h5>Kategori Bantuan</h5>
+                    <a href="#" class="footer-link">Cara Pemakaian Pestisida</a>
+                    <a href="#" class="footer-link">Info Toksisitas WHO</a>
+                    <a href="#" class="footer-link">Aplikasi Agen Hayati</a>
+                    <a href="#" class="footer-link">Hubungi Ahli Agronomi</a>
                 </div>
 
                 <div class="col-lg-3 col-md-6">
                     <h5>Newsletter</h5>
-                    <p class="text-white-50">Dapatkan update terbaru tentang dunia pertanian dan promo produk.</p>
+                    <p class="text-white-50" style="font-size: 0.9rem;">Dapatkan update teknologi pertanian terbaru.</p>
                     <form class="d-flex mt-3"
-                        onsubmit="event.preventDefault(); Swal.fire('Berhasil!', 'Terima kasih telah berlangganan.', 'success')">
-                        <input type="email" class="form-control rounded-start-pill border-0" placeholder="Email Anda"
+                        onsubmit="event.preventDefault(); Swal.fire({title: 'Berhasil!', text: 'Terima kasih telah berlangganan.', icon: 'success', confirmButtonColor: '#2e7d32'});">
+                        <input type="email" class="form-control rounded-start border-0" placeholder="Email Anda"
                             required>
-                        <button class="btn btn-success rounded-end-pill px-3" type="submit"><i
+                        <button class="btn btn-success rounded-end px-3" type="submit"><i
                                 class="fa-solid fa-paper-plane"></i></button>
                     </form>
                 </div>
@@ -109,33 +419,218 @@
         </div>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Menggunakan array produk yang sama agar konsisten
+        // Database Produk Terpadu (Diambil dari Dokumen Word)
         const productsDB = [
-            { id: 1, name: "Tomat Ceri Hidroponik", price: "Rp 25.000", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500" },
-            { id: 2, name: "Selada Keriting", price: "Rp 15.000", image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=500" },
-            { id: 3, name: "Traktor Mini", price: "Rp 4.500.000", image: "https://images.unsplash.com/photo-1592982537447-6f296d194726?w=500" },
-            { id: 4, name: "Pupuk Kompos", price: "Rp 45.000", image: "https://images.unsplash.com/photo-1589923158776-cb4485d99fd6?w=500" },
-            { id: 5, name: "Wortel Segar", price: "Rp 18.000", image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500" },
-            { id: 6, name: "Benih Cabai", price: "Rp 35.000", image: "https://images.unsplash.com/photo-1596199050105-6d5d32222916?w=500" }
+            {
+                id: 1,
+                name: "ABACEL 18EC 100 ML Insektisida Abamektin (Kental)",
+                category: "Insektisida",
+                price: 33250,
+                rating: 4.9,
+                sold: 15,
+                toxicity: "Kuning",
+                toxicityLabel: "Kelas II",
+                // Menggunakan placeholder image botol kimia
+                image: "Produk/abacel.jpeg",
+                desc: "Untuk Hama Thrips, Kutu Daun"
+            },
+            {
+                id: 2,
+                name: "AVIDOR 25WP 100gram - Insektisida Sistemik",
+                category: "Insektisida",
+                price: 20000,
+                rating: 4.6,
+                sold: 422,
+                toxicity: "Biru",
+                toxicityLabel: "Kelas III",
+                // Placeholder serbuk/kemasan sachet
+                image: "Produk/AVIDOR 25WP 100gram - Insektisida Sistemik.jpeg",
+                desc: "Pengendali Wereng & Kutu Kebul"
+            },
+            {
+                id: 3,
+                name: "Decis Insektisida Bayer Deltamethrin 50-100 ml",
+                category: "Insektisida",
+                price: 25000,
+                rating: 4.8,
+                sold: 1500,
+                toxicity: "Kuning",
+                toxicityLabel: "Kelas II",
+                image: "E:/Tani Aisha/Produk/sg-11134201-7rbkd-ll37kw0jwdx151.jpeg",
+                desc: "Knock-down cepat untuk Ulat Grayak"
+            },
+            {
+                id: 4,
+                name: "Fungisida Mankozeb 80% - Antila 80 WP 1 kg",
+                category: "Fungisida",
+                price: 41955,
+                rating: 4.5,
+                sold: 79,
+                toxicity: "Hijau",
+                toxicityLabel: "Kelas IV",
+                image: "E:/Tani Aisha/Produk/Fungisida Mankozeb 80% - Antila 80 WP 1 kg.jpeg",
+                desc: "Protektif untuk penyakit Bercak Ungu & Patek"
+            },
+            {
+                id: 5,
+                name: "Fungisida Trichoderma Marfu P 1 kg",
+                category: "Agen Hayati",
+                price: 19475,
+                rating: 4.8,
+                sold: 554,
+                toxicity: "Hijau",
+                toxicityLabel: "Organik",
+                image: "E:/Tani Aisha/Produk/Fungisida Trichoderma Marfu P 1 kg.jpeg",
+                desc: "Mencegah serangan jamur tanah, Layu Fusarium"
+            },
+            {
+                id: 6,
+                name: "Pupuk Hayati Cair PGPR 500ML - Agen Hayati",
+                category: "Biofertilizer",
+                price: 15000,
+                rating: 4.7,
+                sold: 320,
+                toxicity: "Hijau",
+                toxicityLabel: "Organik",
+                image: "E:/Tani Aisha/Produk/Pupuk Hayati Cair PGPR 500ML - Agen Hayati.jpeg",
+                desc: "Pemacu akar & ketahanan bakteri"
+            },
+            {
+                id: 7,
+                name: "Biotek Beauveria Bassiana 100 gr Bio Insektisida",
+                category: "Agen Hayati",
+                price: 13500,
+                rating: 4.8,
+                sold: 27,
+                toxicity: "Hijau",
+                toxicityLabel: "Organik",
+                image: "E:/Tani Aisha/Produk/Biotek Beauveria Bassiana 100 gr Bio Insektisida.jpeg",
+                desc: "Membasmi serangga lunak secara hayati"
+            }
         ];
 
-        const container = document.getElementById('allProductsContainer');
-        productsDB.forEach(p => {
-            container.innerHTML += `
-                <div class="col-6 col-md-3">
-                    <div class="card h-100 border-0 shadow-sm p-2">
-                        <img src="${p.image}" class="card-img-top rounded" style="height:200px; object-fit:cover;">
-                        <div class="card-body p-2">
-                            <h6 class="card-title">${p.name}</h6>
-                            <p class="text-success fw-bold">${p.price}</p>
-                            <button class="btn btn-sm btn-success w-100">Beli</button>
+        const productGrid = document.getElementById('productGrid');
+        let cartItems = 0;
+
+        // Format mata uang Rupiah
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        };
+
+        // Render Toksisitas Badge
+        const getToxicityBadge = (color, label) => {
+            let className = "tox-hijau";
+            if (color === "Kuning") className = "tox-kuning";
+            if (color === "Biru") className = "tox-biru";
+            return `<span class="tox-badge ${className}">${label}</span>`;
+        };
+
+        // Fungsi Render Produk
+        function renderProducts(category = "Semua") {
+            productGrid.innerHTML = '';
+
+            const filteredProducts = category === "Semua"
+                ? productsDB
+                : productsDB.filter(p => p.category === category);
+
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = `<div class="col-12 text-center py-5"><p class="text-muted">Tidak ada produk di kategori ini.</p></div>`;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const soldDisplay = product.sold > 1000 ? (product.sold / 1000).toFixed(1) + 'rb' : product.sold;
+
+                const cardHTML = `
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card">
+                            <div class="product-image-container">
+                                ${getToxicityBadge(product.toxicity, product.toxicityLabel)}
+                                <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title" title="${product.name}">${product.name}</h3>
+                                <div class="product-price">${formatRupiah(product.price)}</div>
+                                <div class="product-meta">
+                                    <span class="rating-stars"><i class="fa-solid fa-star"></i> ${product.rating}</span>
+                                    <span class="sold-count">Terjual ${soldDisplay}</span>
+                                </div>
+                                <button class="btn btn-add-cart mt-2" onclick="addToCart(${product.id}, '${product.name}')">
+                                    <i class="fa-solid fa-cart-plus"></i> Tambah
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                productGrid.innerHTML += cardHTML;
+            });
+        }
+
+        // Fungsi Tambah ke Keranjang (Menggunakan SweetAlert)
+        function addToCart(id, name) {
+            cartItems++;
+            document.getElementById('cart-count').innerText = cartItems;
+
+            // Animasi kecil pada icon keranjang
+            const cartIcon = document.querySelector('.fa-cart-shopping');
+            cartIcon.style.transform = 'scale(1.3)';
+            setTimeout(() => { cartIcon.style.transform = 'scale(1)'; }, 200);
+
+            // Notifikasi Toast
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Dimasukkan ke keranjang'
+            });
+        }
+
+        function showCartInfo() {
+            Swal.fire({
+                title: 'Keranjang Belanja',
+                text: `Anda memiliki ${cartItems} barang di keranjang.`,
+                icon: 'info',
+                confirmButtonText: 'Lanjut Belanja',
+                confirmButtonColor: '#2e7d32'
+            });
+        }
+
+        // Event Listener untuk Filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove active class from all
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked
+                e.target.classList.add('active');
+
+                const filterValue = e.target.getAttribute('data-filter');
+                renderProducts(filterValue);
+            });
         });
+
+        // Initial Render
+        window.onload = () => {
+            renderProducts("Semua");
+        };
     </script>
 </body>
 
